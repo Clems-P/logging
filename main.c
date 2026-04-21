@@ -1,16 +1,13 @@
 #include "logging.h"
 
 int main() {
-    int capteur = 42;
-    char buffer_ram[] = "Je suis en RAM";
+    int a = 10, b = 20, c = 30;
 
-    // Cas 1 : Ça doit compiler et afficher l'ID
-    LOG_ERR("Hello World", 0);
-    LOG_ERR("Valeur: %d", capteur);
+    LOG_ERR("Zero arg");                 // OK
+    LOG_ERR("Un arg: %d", a);            // OK
+    LOG_ERR("Deux args: %d %d", a, b);   // OK
 
-    // Cas 2 : Décommentez la ligne suivante pour voir l'erreur de compilation
-    // LOG_ERR(buffer_ram, 10); 
-
-
+    // LOG_ERR("Trois args", 1, 2, 3); // <--- ERROR: Static assert failed!
+    
     return 0;
 }

@@ -7,17 +7,22 @@ dico = extract_logs('log_test')
 print(dico)
 
 print("--- Attente des logs (Pipe) ---")
+
 for line in sys.stdin:
+    parts = line.strip().split(':')
+    if len(parts) < 2: continue
+
+    addr = parts[0]
+    n_args = int(parts[1])
+    args = parts[2:] # Récupère le reste des arguments
+
+    fmt = dico.get(addr, "ID INCONNU")
+    
+    # Remplacement simple des %d par les valeurs reçues
     try:
-        addr, val = line.strip().split(':')
-        print(addr, val)
-        # On cherche le message correspondant à l'adresse (ID)
-        fmt = dico.get(addr, "ID INCONNU")
-        
-        # On affiche le log formaté
-        if "%d" in fmt:
-            print(f"[LOG] " + fmt.replace("%d", val))
-        else:
-            print(f"[LOG] {fmt}")
-    except ValueError:
-        continue
+        output = fmt
+        for arg in args:
+            output = output.replace("%d", arg, 1)
+        print(f"[\x1b[31mLOG\x1b[0m] {output}")
+    except Exception as e:
+        print(f"Erreur décodage: {e}")
